@@ -10,6 +10,7 @@ from tkinter import filedialog
 import tkinter.messagebox
 import matplotlib.pyplot as plt
 import os
+import xlsxwriter
 
 
 # define o local da onde o script esta sendo rodado
@@ -57,8 +58,47 @@ def Ztest():
                                                  initialfile=data_file2,
                                                  title="Select file", 
                                                  filetypes=(("XLSX Files", '*.xlsx'),("all files","*.*")))
-    writer = ExcelWriter(file_to_save)
-    ztest.to_excel(writer,'Sheet1',index=False)
+    number_rows = len(ztest.index)
+    writer = pd.ExcelWriter(file_to_save, engine='xlsxwriter')
+    ztest.to_excel(writer,sheet_name='Z-Test',index=False)
+    workbook = writer.book
+    worksheet = writer.sheets['Z-Test']
+    chart = workbook.add_chart({'type': 'line'})
+    chart.set_title({
+    'name': 'Z-Score: ' + data_file2,
+    'name_font': {
+        'name': 'Calibri',
+        'color': 'black',
+        },
+    })
+
+    chart.set_x_axis({
+    'name': 'Time',
+    'name_font': {
+        'name': 'Calibri',
+        'color': 'black'
+        },
+    'num_font': {
+        'name': 'Calibri',
+        'color': 'black',
+        },
+    })
+
+    chart.set_y_axis({
+    'name': 'Z-Score',
+    'name_font': {
+        'name': 'Calibri',
+        'color': 'black'
+        },
+    'num_font': {
+        'color': 'black',
+        },
+    })
+
+    chart.set_legend({'position': 'none'})
+    chart.add_series({'values': ['Z-Test', 1, 5, number_rows, 5],
+                      'categories': ['Z-Test', 1, 1, number_rows, 1]})
+    worksheet.insert_chart('G7', chart)
     writer.save()
     tkinter.messagebox.showinfo('File Saved','Salvo em ' + file_to_save)
     
