@@ -7,7 +7,6 @@ from pandas import ExcelWriter
 from pandas import ExcelFile
 import tkinter
 from tkinter import filedialog
-#from tkinter.filedialog import askopenfilename
 import tkinter.messagebox
 import matplotlib.pyplot as plt
 import os
@@ -20,7 +19,7 @@ script_path = os.getcwd()
 # Parametros tkinter
 window = tkinter.Tk()
 window.geometry('640x480')  # window size
-window.title("Welcome to GUI Plot App")  # window title
+window.title("Welcome to Z-Plot App")  # window title
 
 # Linha 1 - Abrir arquivo coletado para trabalhar e transformar em .xlsx
 lbl = tkinter.Label(window, text="Clique para abrir o arquivo...",
@@ -52,12 +51,16 @@ def Ztest():
     ztest['Sum'] = ztest['Ones'].cumsum()
     ztest['Average'] = ztest['Sum']/(ztest['index'])
     ztest['Zscore'] = (ztest['Average']-1024)/(22.62741699796/(ztest['index']**0.5))
+    data_file2 = data_file.replace(script_path + "/", "")
+    data_file2 = data_file2.replace(".csv", "")
     file_to_save =  filedialog.asksaveasfilename(initialdir=script_path,
+                                                 initialfile=data_file2,
                                                  title="Select file", 
                                                  filetypes=(("XLSX Files", '*.xlsx'),("all files","*.*")))
     writer = ExcelWriter(file_to_save)
     ztest.to_excel(writer,'Sheet1',index=False)
     writer.save()
+    tkinter.messagebox.showinfo('File Saved','Salvo em ' + file_to_save)
     
 
 btnz = tkinter.Button(window, text="Gogogo", bg="white", fg="blue",
