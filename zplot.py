@@ -20,32 +20,44 @@ script_path = os.getcwd()
 
 # Parametros tkinter
 window = tkinter.Tk()
-window.geometry('720x520')  # window size
+# window.geometry('800x520')  # window size
 window.title("Welcome to Z-Plot App")  # window title
 
+# Adicionando tabs
+tab_control = ttk.Notebook(window) 
+tab1 = ttk.Frame(tab_control) 
+tab2 = ttk.Frame(tab_control) 
+tab_control.add(tab1, text='Gerar arquivos') 
+tab_control.add(tab2, text='Coletar dados')
+
+# ------------------------- TAB1---------------------------------------
 
 # Linha 1 - Abrir arquivo coletado para trabalhar e transformar em .xlsx
-lbl = tkinter.Label(window, text="Clique para abrir o arquivo...",
-                    font=("Arial Bold", 11))  # Text inside window
-lbl.grid(column=0, row=0)  # posição do label
+lbl1 = tkinter.Label(tab1, text="Clique para abrir o arquivo...",
+                     font=("Arial Bold", 11),
+                     padx=5, pady=5)  # Text inside window
+lbl1.grid(column=0, row=0)  # posição do label
 
 
 def open_file():  # criar função para quando o botão for clicado
     global data_file  # criar variavel global, pode ser usada fora da função
     data_file = filedialog.askopenfilename(initialdir=script_path, title="Select file",
                                 filetypes=(("CSV Files", '*.csv'), ("Text Files", '*.txt'), ("all files", "*.*")))
-    lbl.configure(text=data_file)
+    lbl1.configure(text=data_file)
+    btn1.configure(text="Selecionar outro arquivo")
 
 
 
-btn = tkinter.Button(window, text="Selecionar arquivo", bg="white", fg="blue",
-                     command=open_file)  # criar botão/ command=função do botão
-btn.grid(column=1, row=0)  # posição do botão
+btn1 = tkinter.Button(tab1, text="Selecionar arquivo", bg="white", fg="blue",
+                     command=open_file,
+                     padx=5, pady=5)  # criar botão/ command=função do botão
+btn1.grid(column=1, row=0)  # posição do botão
 
 # Linha 2 - Salvar arquivo para xlxs direto
-lbla = tkinter.Label(window, text="Gerar arquivo .xlsx",
-                    font=("Arial Bold", 11))  # Text inside window
-lbla.grid(column=0, row=1)  # posição do label
+lbl2 = tkinter.Label(tab1, text="Gerar arquivo .xlsx",
+                    font=("Arial Bold", 11),
+                     padx=5, pady=5)  # Text inside window
+lbl2.grid(column=0, row=1)  # posição do label
 
 def Ztesta(): 
     ztest = pd.read_csv(data_file, sep=' ', names=["Time", "Ones"])
@@ -103,14 +115,16 @@ def Ztesta():
     tkinter.messagebox.showinfo('File Saved','Salvo em ' + file_to_save)
     
 
-btna = tkinter.Button(window, text="Gerar", bg="white", fg="blue",
-                     command=Ztesta)  # criar botão/ command=função do botão
-btna.grid(column=1, row=1)  # posição do botão
+btn2 = tkinter.Button(tab1, text="Gerar", bg="white", fg="blue",
+                     command=Ztesta,
+                     padx=5, pady=5)  # criar botão/ command=função do botão
+btn2.grid(column=1, row=1)  # posição do botão
 
 # Linha 3 - Salvar as arquivo para xlxs
-lblz = tkinter.Label(window, text="Gerar e salvar em...",
-                    font=("Arial Bold", 11))  # Text inside window
-lblz.grid(column=0, row=2)  # posição do label
+lbl3 = tkinter.Label(tab1, text="Gerar e salvar em...",
+                    font=("Arial Bold", 11),
+                     padx=5, pady=5)  # Text inside window
+lbl3.grid(column=0, row=2)  # posição do label
 
 def Ztest(): 
     ztest = pd.read_csv(data_file, sep=' ', names=["Time", "Ones"])
@@ -171,9 +185,14 @@ def Ztest():
     tkinter.messagebox.showinfo('File Saved','Salvo em ' + file_to_save)
     
 
-btnz = tkinter.Button(window, text="Savar em...", bg="white", fg="blue",
-                     command=Ztest)  # criar botão/ command=função do botão
-btnz.grid(column=1, row=2)  # posição do botão
+btn3 = tkinter.Button(tab1, text="Savar em...", bg="white", fg="blue",
+                     command=Ztest,
+                     padx=5, pady=5)  # criar botão/ command=função do botão
+btn3.grid(column=1, row=2)  # posição do botão
+
+# ------------------------------TAB2 -----------------------------------
+
+
 
 # Confirma saída do programa e fecha de vez
 def confirmExit():
@@ -183,7 +202,9 @@ def confirmExit():
 
 window.protocol('WM_DELETE_WINDOW', confirmExit)
 
+
 # need loop to maintain it open - Abre o tkinter e mantem em loop
+tab_control.pack(expand=1, fill='both')
 window.mainloop()  
 
 
