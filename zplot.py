@@ -95,5 +95,4 @@ window.protocol('WM_DELETE_WINDOW', confirmExit)
 
 window.mainloop()  # need loop to maintain it open
 
-print(pinto)
 
