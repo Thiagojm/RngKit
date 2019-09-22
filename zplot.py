@@ -52,7 +52,7 @@ def Ztest():
     ztest['Sum'] = ztest['Ones'].cumsum()
     ztest['Average'] = ztest['Sum']/(ztest['index'])
     ztest['Zscore'] = (ztest['Average']-1024)/(22.62741699796/(ztest['index']**0.5))
-    data_file2 = data_file.replace(script_path + "/", "")
+    data_file2 = os.path.basename(data_file)
     data_file2 = data_file2.replace(".csv", "")
     file_to_save =  filedialog.asksaveasfilename(initialdir=script_path,
                                                  initialfile=data_file2,
