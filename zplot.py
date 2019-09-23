@@ -10,11 +10,13 @@ import tkinter.messagebox
 import matplotlib.pyplot as plt
 import os
 import xlsxwriter
+import subprocess
 
 
 # define o local da onde o script esta sendo rodado
 global script_path
 global isCapturingOn
+global selectedColeta
 script_path = os.getcwd()
 isCapturingOn = False
 
@@ -191,30 +193,52 @@ btn3 = tk.Button(tab1, text="Savar em...", bg="white", fg="blue",
 btn3.grid(column=1, row=2)  # posição do botão
 
 # ------------------------------TAB2 -----------------------------------
+selectedColeta = tk.IntVar()
+radBbla = tk.ttk.Radiobutton(tab2,text='Bitbabbler', value=1, variable=selectedColeta)
+radTrng = tk.ttk.Radiobutton(tab2,text='TrueRng', value=2, variable=selectedColeta)
+radMbbla = tk.ttk.Radiobutton(tab2,text='Two Bitbabbler', value=3, variable=selectedColeta)
+radMrng = tk.ttk.Radiobutton(tab2,text='Bitbabbler + TrueRng', value=4, variable=selectedColeta)
+radBbla.grid(column=0, row=0)
+radTrng.grid(column=0, row=1)
+radMbbla.grid(column=0, row=2)
+radMrng.grid(column=0, row=3)
+
+
 lbl21 = tk.Label(tab2, text="Coletar dados",
                      font=("Arial Bold", 11),
                      padx=5, pady=5)  # Text inside window
-lbl21.grid(column=0, row=0)  # posição do label
+lbl21.grid(column=1, row=0)  # posição do label
 
 lbl22 = tk.Label(tab2, text="Finalizar coleta",
                      font=("Arial Bold", 11),
                      padx=5, pady=5)  # Text inside window
-lbl22.grid(column=0, row=1)  # posição do label
+lbl22.grid(column=1, row=1)  # posição do label
 
 
 def bbla():  # criar função para quando o botão for clicado
-    import subprocess
+    f_status = "f0"
+    subprocess.run(["./bbla {}".format(f_status)], shell=True)
+
+
+def startCollecting():  # criar função para quando o botão for clicado
     global isCapturingOn
+    global selectedColeta
     if isCapturingOn == False:
-        f_status = "f0"
-        subprocess.run(["./bbla {}".format(f_status)], shell=True)
         isCapturingOn = True
+        if selectedColeta.get() == 1:
+            bbla()
+        elif selectedColeta.get() == 2:
+            trng()
+        elif selectedColeta.get() == 3:
+            mbbla()
+        elif selectedColeta.get() == 4:
+            mrng()
+            
     else:
         tk.messagebox.showinfo('Alerta','Captura já ativa')
 
 
-def stopBbla():
-    import subprocess
+def stopCollecting():
     global isCapturingOn
     if isCapturingOn == True:
         subprocess.run(["ps -ef | awk '/bbla/{print$2}' | sudo xargs kill 2>/dev/null"], shell=True)
@@ -226,14 +250,14 @@ def stopBbla():
 
 
 btn21 = tk.Button(tab2, text="Iniciar coleta", bg="white", fg="blue",
-                     command=bbla,
+                     command=startCollecting,
                      padx=5, pady=5)  # criar botão/ command=função do botão
-btn21.grid(column=1, row=0)  # posição do botão
+btn21.grid(column=2, row=0)  # posição do botão
 
 btn22 = tk.Button(tab2, text="Parar coleta", bg="white", fg="blue",
-                     command=stopBbla,
+                     command=stopCollecting,
                      padx=5, pady=5)  # criar botão/ command=função do botão
-btn22.grid(column=1, row=1)  # posição do botão
+btn22.grid(column=2, row=1)  # posição do botão
 
 
 # Confirma saída do programa e fecha de vez
