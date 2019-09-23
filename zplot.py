@@ -3,9 +3,7 @@
 
 
 import pandas as pd
-from pandas import ExcelWriter
-from pandas import ExcelFile
-import tkinter
+import tkinter as tk
 from tkinter import filedialog
 from tkinter import ttk
 import tkinter.messagebox
@@ -19,9 +17,9 @@ global script_path
 script_path = os.getcwd()  
 
 # Parametros tkinter
-window = tkinter.Tk()
+window = tk.Tk()
 # window.geometry('800x520')  # window size
-window.title("Welcome to Z-Plot App")  # window title
+window.title("Welcome to RNG Project App")  # window title
 
 # Adicionando tabs
 tab_control = ttk.Notebook(window) 
@@ -33,7 +31,7 @@ tab_control.add(tab2, text='Coletar dados')
 # ------------------------- TAB1---------------------------------------
 
 # Linha 1 - Abrir arquivo coletado para trabalhar e transformar em .xlsx
-lbl1 = tkinter.Label(tab1, text="Clique para abrir o arquivo...",
+lbl1 = tk.Label(tab1, text="Clique para abrir o arquivo...",
                      font=("Arial Bold", 11),
                      padx=5, pady=5)  # Text inside window
 lbl1.grid(column=0, row=0)  # posição do label
@@ -48,13 +46,13 @@ def open_file():  # criar função para quando o botão for clicado
 
 
 
-btn1 = tkinter.Button(tab1, text="Selecionar arquivo", bg="white", fg="blue",
+btn1 = tk.Button(tab1, text="Selecionar arquivo", bg="white", fg="blue",
                      command=open_file,
                      padx=5, pady=5)  # criar botão/ command=função do botão
 btn1.grid(column=1, row=0)  # posição do botão
 
 # Linha 2 - Salvar arquivo para xlxs direto
-lbl2 = tkinter.Label(tab1, text="Gerar arquivo .xlsx",
+lbl2 = tk.Label(tab1, text="Gerar arquivo .xlsx",
                     font=("Arial Bold", 11),
                      padx=5, pady=5)  # Text inside window
 lbl2.grid(column=0, row=1)  # posição do label
@@ -112,16 +110,16 @@ def Ztesta():
                       'categories': ['Z-Test', 1, 1, number_rows, 1]})
     worksheet.insert_chart('G2', chart)
     writer.save()
-    tkinter.messagebox.showinfo('File Saved','Salvo em ' + file_to_save)
+    tk.messagebox.showinfo('File Saved','Salvo em ' + file_to_save)
     
 
-btn2 = tkinter.Button(tab1, text="Gerar", bg="white", fg="blue",
+btn2 = tk.Button(tab1, text="Gerar", bg="white", fg="blue",
                      command=Ztesta,
                      padx=5, pady=5)  # criar botão/ command=função do botão
 btn2.grid(column=1, row=1)  # posição do botão
 
 # Linha 3 - Salvar as arquivo para xlxs
-lbl3 = tkinter.Label(tab1, text="Gerar e salvar em...",
+lbl3 = tk.Label(tab1, text="Gerar e salvar em...",
                     font=("Arial Bold", 11),
                      padx=5, pady=5)  # Text inside window
 lbl3.grid(column=0, row=2)  # posição do label
@@ -182,21 +180,21 @@ def Ztest():
                       'categories': ['Z-Test', 1, 1, number_rows, 1]})
     worksheet.insert_chart('G2', chart)
     writer.save()
-    tkinter.messagebox.showinfo('File Saved','Salvo em ' + file_to_save)
+    tk.messagebox.showinfo('File Saved','Salvo em ' + file_to_save)
     
 
-btn3 = tkinter.Button(tab1, text="Savar em...", bg="white", fg="blue",
+btn3 = tk.Button(tab1, text="Savar em...", bg="white", fg="blue",
                      command=Ztest,
                      padx=5, pady=5)  # criar botão/ command=função do botão
 btn3.grid(column=1, row=2)  # posição do botão
 
 # ------------------------------TAB2 -----------------------------------
-lbl21 = tkinter.Label(tab2, text="Coletar dados",
+lbl21 = tk.Label(tab2, text="Coletar dados",
                      font=("Arial Bold", 11),
                      padx=5, pady=5)  # Text inside window
 lbl21.grid(column=0, row=0)  # posição do label
 
-lbl22 = tkinter.Label(tab2, text="Finalizar coleta",
+lbl22 = tk.Label(tab2, text="Finalizar coleta",
                      font=("Arial Bold", 11),
                      padx=5, pady=5)  # Text inside window
 lbl22.grid(column=0, row=1)  # posição do label
@@ -204,22 +202,23 @@ lbl22.grid(column=0, row=1)  # posição do label
 
 def bbla():  # criar função para quando o botão for clicado
     import subprocess
-    f_status = "f0"
+    f_status = "f4"
     subprocess.run(["./bbla {}".format(f_status)], shell=True)
 
 
 def stopBbla():
     import subprocess
     subprocess.run(["ps -ef | awk '/bbla/{print$2}' | sudo xargs kill 2>/dev/null"], shell=True)
+    tk.messagebox.showinfo('File Saved','Salvo em ' + script_path + '/coletas')
 
 
 
-btn21 = tkinter.Button(tab2, text="Iniciar coleta", bg="white", fg="blue",
+btn21 = tk.Button(tab2, text="Iniciar coleta", bg="white", fg="blue",
                      command=bbla,
                      padx=5, pady=5)  # criar botão/ command=função do botão
 btn21.grid(column=1, row=0)  # posição do botão
 
-btn22 = tkinter.Button(tab2, text="Parar coleta", bg="white", fg="blue",
+btn22 = tk.Button(tab2, text="Parar coleta", bg="white", fg="blue",
                      command=stopBbla,
                      padx=5, pady=5)  # criar botão/ command=função do botão
 btn22.grid(column=1, row=1)  # posição do botão
@@ -227,7 +226,7 @@ btn22.grid(column=1, row=1)  # posição do botão
 
 # Confirma saída do programa e fecha de vez
 def confirmExit():
-    if tkinter.messagebox.askokcancel('Quit', 'Are you sure you want to exit?'):
+    if tk.messagebox.askokcancel('Quit', 'Are you sure you want to exit?'):
         window.destroy()
 
 
