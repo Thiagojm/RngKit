@@ -1,0 +1,23 @@
+#!/bin/bash
+
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+path=$DIR'/coletas/'
+mkdir -p $path
+export path
+sudo service seedd stop
+fname="$( date +"%Y%m%dT%H%M%S" )"
+number=1
+#read -e -p "Enter XOR (f1, f2 etc) or RAW (f0) mode [Default = f0]: " -i "f0" var1
+
+while ( true ); do
+	before=`date +%s%3N`
+	sudo seedd --limit-max-xfer --no-qa -$1 -b 256 | tee -a $path$fname.bin | xxd -b -c256 | cut -f 2-257 -d ' ' | sed 's/[^1]//g' | awk -v date="$(date +"%T")" '{ print date, length }' >>$path$fname.csv	
+	after=`date +%s%3N`
+	DELAY=`echo "1-(($after-$before)/1000)" | bc -l`
+	sleep $DELAY 2>/dev/null
+done &
+echo -e "\e[1;36;5mCollecting data...\e[0m"
+read -p "Press [Enter] key to stop..."
+#ps -ef | awk '/bbla/{print$2}' | sudo xargs kill 2>/dev/null
+

@@ -191,7 +191,38 @@ btn3 = tkinter.Button(tab1, text="Savar em...", bg="white", fg="blue",
 btn3.grid(column=1, row=2)  # posição do botão
 
 # ------------------------------TAB2 -----------------------------------
+lbl21 = tkinter.Label(tab2, text="Coletar dados",
+                     font=("Arial Bold", 11),
+                     padx=5, pady=5)  # Text inside window
+lbl21.grid(column=0, row=0)  # posição do label
 
+lbl22 = tkinter.Label(tab2, text="Finalizar coleta",
+                     font=("Arial Bold", 11),
+                     padx=5, pady=5)  # Text inside window
+lbl22.grid(column=0, row=1)  # posição do label
+
+
+def bbla():  # criar função para quando o botão for clicado
+    import subprocess
+    f_status = "f0"
+    subprocess.run(["./bbla {}".format(f_status)], shell=True)
+
+
+def stopBbla():
+    import subprocess
+    subprocess.run(["ps -ef | awk '/bbla/{print$2}' | sudo xargs kill 2>/dev/null"], shell=True)
+
+
+
+btn21 = tkinter.Button(tab2, text="Iniciar coleta", bg="white", fg="blue",
+                     command=bbla,
+                     padx=5, pady=5)  # criar botão/ command=função do botão
+btn21.grid(column=1, row=0)  # posição do botão
+
+btn22 = tkinter.Button(tab2, text="Parar coleta", bg="white", fg="blue",
+                     command=stopBbla,
+                     padx=5, pady=5)  # criar botão/ command=função do botão
+btn22.grid(column=1, row=1)  # posição do botão
 
 
 # Confirma saída do programa e fecha de vez
