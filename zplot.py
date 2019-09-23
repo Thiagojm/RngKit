@@ -14,7 +14,9 @@ import xlsxwriter
 
 # define o local da onde o script esta sendo rodado
 global script_path
-script_path = os.getcwd()  
+global isCapturingOn
+script_path = os.getcwd()
+isCapturingOn = False
 
 # Parametros tkinter
 window = tk.Tk()
@@ -202,14 +204,24 @@ lbl22.grid(column=0, row=1)  # posição do label
 
 def bbla():  # criar função para quando o botão for clicado
     import subprocess
-    f_status = "f4"
-    subprocess.run(["./bbla {}".format(f_status)], shell=True)
+    global isCapturingOn
+    if isCapturingOn == False:
+        f_status = "f0"
+        subprocess.run(["./bbla {}".format(f_status)], shell=True)
+        isCapturingOn = True
+    else:
+        tk.messagebox.showinfo('Alerta','Captura já ativa')
 
 
 def stopBbla():
     import subprocess
-    subprocess.run(["ps -ef | awk '/bbla/{print$2}' | sudo xargs kill 2>/dev/null"], shell=True)
-    tk.messagebox.showinfo('File Saved','Salvo em ' + script_path + '/coletas')
+    global isCapturingOn
+    if isCapturingOn == True:
+        subprocess.run(["ps -ef | awk '/bbla/{print$2}' | sudo xargs kill 2>/dev/null"], shell=True)
+        tk.messagebox.showinfo('File Saved','Salvo em ' + script_path + '/coletas')
+        isCapturingOn = False
+    else:
+        tk.messagebox.showinfo('Alerta','Captura não iniciada')
 
 
 
