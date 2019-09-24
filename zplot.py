@@ -240,7 +240,7 @@ entryMblaId2 = tk.Entry(tab2, width=8, textvariable=selectedEntryId2)
 selectedEntryId2.set("OSYJHX")
 entryMblaId2.grid(column=5, row=2)
 
-lbl21 = tk.Label(tab2, text="<--RAW (1) ou XOR(2,3 ...)",
+lbl21 = tk.Label(tab2, text="<--RAW (0) ou XOR(1, 2 ...)",
                      font=("Arial Bold", 11),
                      padx=5, pady=5)  # Text inside window
 lbl21.grid(column=2, row=0)  # posição do label
@@ -250,7 +250,7 @@ lbl22 = tk.Label(tab2, text="Finalizar coleta -->",
                      padx=5, pady=5)  # Text inside window
 lbl22.grid(column=2, row=1)  # posição do label
 
-lbl23 = tk.Label(tab2, text="<--RAW (1) ou XOR(2,3 ...)",
+lbl23 = tk.Label(tab2, text="<--RAW (0) ou XOR(1, 2 ...)",
                      font=("Arial Bold", 11),
                      padx=5, pady=5)  # Text inside window
 lbl23.grid(column=3, row=2)  # posição do label
