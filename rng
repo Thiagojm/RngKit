@@ -1,0 +1,39 @@
+#!/bin/bash
+
+
+# Normal Mode	300	Streams from both generators combined, and whitened
+# Power Supply Debug	1200	Diagnostic Mode, Voltage displayed in mV in ASCII
+# RNG Debug	2400	Diagnostic Mode, outputs 0xRRR 0xRRR in ASCII
+# Normal, RNG1	4800	Using generator 1, whitened
+# Normal, RNG2	9600	Using generator 2, whitened
+# RAW Binary	19200	ADC Values from both generators, non whitened, See document on RAW Binary format, contains ADC bias in the LSB
+# RAW ASCII	38400	ADC Values from both generators, non whitened, in ASCII, “AAAA, BBBB\n” format, contains ADC bias in the LSB
+
+# sleep 15
+# stty -F /dev/ttyACM0 110
+# stty -F /dev/ttyACM0 300
+# stty -F /dev/ttyACM0 110
+# 4a linha q define o modo
+# stty -F /dev/ttyACM0 300
+# sleep 1
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+path=$DIR'/coletas/'
+mkdir -p $path
+export path
+sudo service seedd stop
+fname="$( date +"%Y%m%dT%H%M%S" )"
+number=1
+
+
+while ( true ); do
+	before=`date +%s%3N`
+	sudo dd if=/dev/ttyACM0 bs=1 count=256 | tee -a $path$fname.bin | xxd -b -c256 | cut -f 2-257 -d ' ' | sed 's/[^1]//g' | awk -v date="$(date +"%T")" '{ print date, length }' >>$path$fname.csv	
+	after=`date +%s%3N`
+	DELAY=`echo "1-(($after-$before)/1000)" | bc -l`
+	sleep $DELAY 2>/dev/null
+done &
+# echo -e "\e[1;36;5mCollecting data...\e[0m"
+# read -p "Press [Enter] key to stop..."
+# ps -ef | awk '/rng/{print$2}' | sudo xargs kill 2>/dev/null
+

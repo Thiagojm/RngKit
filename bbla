@@ -17,7 +17,7 @@ while ( true ); do
 	DELAY=`echo "1-(($after-$before)/1000)" | bc -l`
 	sleep $DELAY 2>/dev/null
 done &
-echo -e "\e[1;36;5mCollecting data...\e[0m"
-read -p "Press [Enter] key to stop..."
-#ps -ef | awk '/bbla/{print$2}' | sudo xargs kill 2>/dev/null
+# echo -e "\e[1;36;5mCollecting data...\e[0m"
+# read -p "Press [Enter] key to stop..."
+# ps -ef | awk '/bbla/{print$2}' | sudo xargs kill 2>/dev/null
 

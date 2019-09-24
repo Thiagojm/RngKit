@@ -17,6 +17,11 @@ import subprocess
 global script_path
 global isCapturingOn
 global selectedColeta
+global selectedCombo
+global selectedComboM1
+global selectedComboM2
+global selectedEntryId1
+global selectedEntryId2
 script_path = os.getcwd()
 isCapturingOn = False
 
@@ -193,7 +198,10 @@ btn3 = tk.Button(tab1, text="Savar em...", bg="white", fg="blue",
 btn3.grid(column=1, row=2)  # posição do botão
 
 # ------------------------------TAB2 -----------------------------------
+
+# Radiobuttons
 selectedColeta = tk.IntVar()
+selectedColeta.set(1)
 radBbla = tk.ttk.Radiobutton(tab2,text='Bitbabbler', value=1, variable=selectedColeta)
 radTrng = tk.ttk.Radiobutton(tab2,text='TrueRng', value=2, variable=selectedColeta)
 radMbbla = tk.ttk.Radiobutton(tab2,text='Two Bitbabbler', value=3, variable=selectedColeta)
@@ -203,21 +211,79 @@ radTrng.grid(column=0, row=1)
 radMbbla.grid(column=0, row=2)
 radMrng.grid(column=0, row=3)
 
+# Combobox - bbla
+selectedCombo = tk.StringVar()
+comboBbla = tk.ttk.Combobox(tab2, width=3)
+comboBbla['values']= (0, 1, 2, 3, 4)
+comboBbla.current(0)
+comboBbla.grid(column=1, row=0)
 
-lbl21 = tk.Label(tab2, text="Coletar dados",
+# Combobox - mbbla - Raw/XOR
+selectedComboM1 = tk.StringVar()
+comboMbla1 = tk.ttk.Combobox(tab2, width=3)
+comboMbla1['values']= (0, 1, 2, 3, 4)
+comboMbla1.current(0)
+comboMbla1.grid(column=1, row=2)
+selectedComboM2 = tk.StringVar()
+comboMbla2 = tk.ttk.Combobox(tab2, width=3)
+comboMbla2['values']= (0, 1, 2, 3, 4)
+comboMbla2.current(0)
+comboMbla2.grid(column=2, row=2)
+
+# Entry - mbbla - Bitbabbler ID
+selectedEntryId1 = tk.StringVar()
+entryMblaId1 = tk.Entry(tab2, width=8, textvariable=selectedEntryId1)
+selectedEntryId1.set("JA1ANI")
+entryMblaId1.grid(column=4, row=2)
+selectedEntryId2 = tk.StringVar()
+entryMblaId2 = tk.Entry(tab2, width=8, textvariable=selectedEntryId2)
+selectedEntryId2.set("OSYJHX")
+entryMblaId2.grid(column=5, row=2)
+
+lbl21 = tk.Label(tab2, text="<--RAW (1) ou XOR(2,3 ...)",
                      font=("Arial Bold", 11),
                      padx=5, pady=5)  # Text inside window
-lbl21.grid(column=1, row=0)  # posição do label
+lbl21.grid(column=2, row=0)  # posição do label
 
-lbl22 = tk.Label(tab2, text="Finalizar coleta",
+lbl22 = tk.Label(tab2, text="Finalizar coleta -->",
                      font=("Arial Bold", 11),
                      padx=5, pady=5)  # Text inside window
-lbl22.grid(column=1, row=1)  # posição do label
+lbl22.grid(column=2, row=1)  # posição do label
 
+lbl23 = tk.Label(tab2, text="<--RAW (1) ou XOR(2,3 ...)",
+                     font=("Arial Bold", 11),
+                     padx=5, pady=5)  # Text inside window
+lbl23.grid(column=3, row=2)  # posição do label
+
+lbl24 = tk.Label(tab2, text="<--Type Bitbabblers ID",
+                     font=("Arial Bold", 11),
+                     padx=5, pady=5)  # Text inside window
+lbl24.grid(column=6, row=2)  # posição do label
+
+lbl25 = tk.Label(tab2, text="off",
+                     font=("Arial Bold", 11),
+                     padx=5, pady=5)  # Text inside window
+lbl25.grid(column=1, row=3)  # posição do label
 
 def bbla():  # criar função para quando o botão for clicado
-    f_status = "f0"
-    subprocess.run(["./bbla {}".format(f_status)], shell=True)
+    selectedCombo = comboBbla.get()
+    subprocess.run(["./bbla f{}".format(selectedCombo)], shell=True)
+
+
+def rng():  # criar função para quando o botão for clicado
+    subprocess.run(["./rng"], shell=True)
+
+
+def mbbla():
+    selectedComboM1 = comboMbla1.get()
+    selectedComboM2 = comboMbla2.get()
+    selectedEntryId1 = entryMblaId1.get()
+    selectedEntryId2 = entryMblaId2.get()
+    subprocess.run(["./mbbla f{} f{} {} {}".format(selectedComboM1, selectedComboM2, selectedEntryId1, selectedEntryId2)], shell=True)
+    
+
+def mrng():
+    tk.messagebox.showinfo('Alerta','Ainda em desenvolvimento')
 
 
 def startCollecting():  # criar função para quando o botão for clicado
@@ -228,7 +294,7 @@ def startCollecting():  # criar função para quando o botão for clicado
         if selectedColeta.get() == 1:
             bbla()
         elif selectedColeta.get() == 2:
-            trng()
+            rng()
         elif selectedColeta.get() == 3:
             mbbla()
         elif selectedColeta.get() == 4:
@@ -240,10 +306,18 @@ def startCollecting():  # criar função para quando o botão for clicado
 
 def stopCollecting():
     global isCapturingOn
+    global selectedColeta
     if isCapturingOn == True:
-        subprocess.run(["ps -ef | awk '/bbla/{print$2}' | sudo xargs kill 2>/dev/null"], shell=True)
-        tk.messagebox.showinfo('File Saved','Salvo em ' + script_path + '/coletas')
         isCapturingOn = False
+        if selectedColeta.get() == 1:
+            subprocess.run(["ps -ef | awk '/bbla/{print$2}' | sudo xargs kill 2>/dev/null"], shell=True)   
+        elif selectedColeta.get() == 2:
+            subprocess.run(["ps -ef | awk '/rng/{print$2}' | sudo xargs kill 2>/dev/null"], shell=True)
+        elif selectedColeta.get() == 3:
+            subprocess.run(["ps -ef | awk '/mbbla/{print$2}' | sudo xargs kill 2>/dev/null"], shell=True)
+        elif selectedColeta.get() == 4:
+            subprocess.run(["ps -ef | awk '/mrng/{print$2}' | sudo xargs kill 2>/dev/null"], shell=True)
+        tk.messagebox.showinfo('File Saved','Salvo em ' + script_path + '/coletas')
     else:
         tk.messagebox.showinfo('Alerta','Captura não iniciada')
 
@@ -252,12 +326,12 @@ def stopCollecting():
 btn21 = tk.Button(tab2, text="Iniciar coleta", bg="white", fg="blue",
                      command=startCollecting,
                      padx=5, pady=5)  # criar botão/ command=função do botão
-btn21.grid(column=2, row=0)  # posição do botão
+btn21.grid(column=3, row=0)  # posição do botão
 
 btn22 = tk.Button(tab2, text="Parar coleta", bg="white", fg="blue",
                      command=stopCollecting,
                      padx=5, pady=5)  # criar botão/ command=função do botão
-btn22.grid(column=2, row=1)  # posição do botão
+btn22.grid(column=3, row=1)  # posição do botão
 
 
 # Confirma saída do programa e fecha de vez
