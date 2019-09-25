@@ -49,6 +49,9 @@ frameTab12.grid(column=1, row=0, sticky="ns")
 frameTab13 = tk.Frame(tab1, borderwidth="2", relief="ridge")
 frameTab13.grid(column=2, row=0, sticky="ns")
 
+frameTab14 = tk.Frame(tab1, borderwidth="2", relief="ridge")
+frameTab14.grid(column=3, row=0, sticky="ns")
+
 # Linha 1 - Abrir arquivo coletado para trabalhar e transformar em .xlsx
 lbl1 = tk.Label(frameTab11, text="Clique para abrir o arquivo...",
                      font=("Arial Bold", 11),
@@ -64,7 +67,14 @@ bitB = bitB.resize((200, 140), Image.ANTIALIAS)
 bitBjov = ImageTk.PhotoImage(bitB)
 labelimg = tk.Label(frameTab13, image=bitBjov)
 labelimg.image = bitBjov
-labelimg.grid(row = 0, column = 0, columnspan = 5, sticky="wens")
+labelimg.grid(row = 0, column = 0, sticky="wens")
+
+projIm = Image.open("Proj.jpg")
+projIm = projIm.resize((200, 140), Image.ANTIALIAS)
+projImjov = ImageTk.PhotoImage(projIm)
+labelimg2 = tk.Label(frameTab14, image=projImjov)
+labelimg2.image = projImjov
+labelimg2.grid(row = 0, column = 0, sticky="wens")
 
 
 def open_file():  # criar função para quando o botão for clicado
@@ -227,6 +237,15 @@ frameTab21.grid(column=0, row=0, sticky="ns")
 frameTab22 = tk.Frame(tab2, borderwidth="2", relief="ridge")
 frameTab22.grid(column=1, row=0, sticky="ns")
 
+frameTab23 = tk.Frame(tab2, borderwidth="2", relief="ridge")
+frameTab23.grid(column=2, row=0, sticky="ns")
+
+frameTab24 = tk.Frame(tab2, borderwidth="2", relief="ridge")
+frameTab24.grid(column=3, row=0, sticky="ns")
+
+frameTab25 = tk.Frame(tab2, borderwidth="2", relief="ridge")
+frameTab25.grid(column=4, row=0, sticky="ns")
+
 
 # Radiobuttons
 selectedColeta = tk.IntVar()
@@ -235,64 +254,76 @@ radBbla = tk.ttk.Radiobutton(frameTab21,text='Bitbabbler', value=1, variable=sel
 radTrng = tk.ttk.Radiobutton(frameTab21,text='TrueRng', value=2, variable=selectedColeta)
 radMbbla = tk.ttk.Radiobutton(frameTab21,text='Two Bitbabbler', value=3, variable=selectedColeta)
 radMrng = tk.ttk.Radiobutton(frameTab21,text='Bitbabbler + TrueRng', value=4, variable=selectedColeta)
-radBbla.grid(column=0, row=0, sticky="ew")
-radTrng.grid(column=0, row=1, sticky="ew")
-radMbbla.grid(column=0, row=2, sticky="ew")
-radMrng.grid(column=0, row=3, sticky="ew")
+radBbla.grid(column=0, row=1, sticky="ew")
+radTrng.grid(column=0, row=2, sticky="ew")
+radMbbla.grid(column=0, row=3, sticky="ew")
+radMrng.grid(column=0, row=4, sticky="ew")
 
 # Combobox - bbla
 selectedCombo = tk.StringVar()
-comboBbla = tk.ttk.Combobox(frameTab21, width=3)
+comboBbla = tk.ttk.Combobox(frameTab22, width=3)
 comboBbla['values']= (0, 1, 2, 3, 4)
 comboBbla.current(0)
-comboBbla.grid(column=1, row=0)
+comboBbla.grid(column=0, row=1)
 
 # Combobox - mbbla - Raw/XOR
 selectedComboM1 = tk.StringVar()
-comboMbla1 = tk.ttk.Combobox(frameTab21, width=3)
+comboMbla1 = tk.ttk.Combobox(frameTab22, width=3)
 comboMbla1['values']= (0, 1, 2, 3, 4)
 comboMbla1.current(0)
-comboMbla1.grid(column=1, row=2)
+comboMbla1.grid(column=0, row=3)
 selectedComboM2 = tk.StringVar()
-comboMbla2 = tk.ttk.Combobox(frameTab21, width=3)
+comboMbla2 = tk.ttk.Combobox(frameTab22, width=3)
 comboMbla2['values']= (0, 1, 2, 3, 4)
 comboMbla2.current(0)
-comboMbla2.grid(column=2, row=2)
+comboMbla2.grid(column=1, row=3)
 
 # Entry - mbbla - Bitbabbler ID
 selectedEntryId1 = tk.StringVar()
-entryMblaId1 = tk.Entry(frameTab21, width=8, textvariable=selectedEntryId1)
+entryMblaId1 = tk.Entry(frameTab23, width=8, textvariable=selectedEntryId1)
 selectedEntryId1.set("JA1ANI")
-entryMblaId1.grid(column=4, row=2, sticky="ew")
+entryMblaId1.grid(column=0, row=3)
 selectedEntryId2 = tk.StringVar()
-entryMblaId2 = tk.Entry(frameTab21, width=8, textvariable=selectedEntryId2)
+entryMblaId2 = tk.Entry(frameTab23, width=8, textvariable=selectedEntryId2)
 selectedEntryId2.set("OSYJHX")
-entryMblaId2.grid(column=5, row=2, sticky="ew")
+entryMblaId2.grid(column=1, row=3)
 
-lbl21 = tk.Label(frameTab21, text="RAW/XOR",
+lbl20 = tk.Label(frameTab21, text="Choose RNG",
                      font=("Arial Bold", 11),
                      padx=5, pady=5)  # Text inside window
-lbl21.grid(column=2, row=0, sticky="ew")  # posição do label
+lbl20.grid(column=0, row=0, sticky="ew")  # posição do label
 
-#lbl22 = tk.Label(tab2, text="Finalizar coleta -->",
-                    # font=("Arial Bold", 11),
-                    # padx=5, pady=5)  # Text inside window
-#lbl22.grid(column=2, row=1, sticky="ew")  # posição do label
-
-lbl23 = tk.Label(frameTab21, text="RAW/XOR",
+lbl21 = tk.Label(frameTab22, text="RAW/XOR",
                      font=("Arial Bold", 11),
                      padx=5, pady=5)  # Text inside window
-lbl23.grid(column=3, row=2, sticky="ew")  # posição do label
+lbl21.grid(column=0, row=0, sticky="ew", columnspan=2)  # posição do label
 
-lbl24 = tk.Label(frameTab21, text="IDs",
+lbl21i = tk.Label(frameTab22, text=" ",
+                     font=("Arial Bold", 9))  # Text inside window
+lbl21i.grid(column=0, row=2, sticky="ew")  # posição do label
+
+lbl22 = tk.Label(frameTab23, text="BitBabblers IDs",
                      font=("Arial Bold", 11),
                      padx=5, pady=5)  # Text inside window
-lbl24.grid(column=6, row=2, sticky="ew")  # posição do label
+lbl22.grid(column=0, row=0, sticky="ew", columnspan=2)  # posição do label
 
-lbl25 = tk.Label(frameTab21, text="off",
-                     font=("Arial Bold", 11),
-                     padx=5, pady=5)  # Text inside window
-lbl25.grid(column=1, row=3, sticky="ew")  # posição do label
+lbl22i = tk.Label(frameTab23, text=" ",
+                     font=("Arial Bold", 9))  # Text inside window
+lbl22i.grid(column=0, row=1, sticky="ew")  # posição do label
+
+lbl22ii = tk.Label(frameTab23, text=" ",
+                     font=("Arial Bold", 9))  # Text inside window
+lbl22ii.grid(column=0, row=2, sticky="ew")  # posição do label
+
+# Imagem
+
+matrix = Image.open("matrix.jpg")
+matrix = matrix.resize((200, 140), Image.ANTIALIAS)
+matrixjov = ImageTk.PhotoImage(matrix)
+labelmatrix = tk.Label(frameTab25, image=matrixjov)
+labelmatrix.image = matrixjov
+labelmatrix.grid(row = 0, column = 0, sticky="wens")
+
 
 def bbla():  # criar função para quando o botão for clicado
     selectedCombo = comboBbla.get()
@@ -352,12 +383,12 @@ def stopCollecting():
 
 
 
-btn21 = tk.Button(frameTab22, text="Iniciar coleta", bg="white", fg="blue",
+btn21 = tk.Button(frameTab24, text="Iniciar coleta", bg="white", fg="blue",
                      command=startCollecting,
                      padx=5, pady=5)  # criar botão/ command=função do botão
 btn21.grid(column=3, row=0, sticky="ew")  # posição do botão
 
-btn22 = tk.Button(frameTab22, text="Parar coleta", bg="white", fg="blue",
+btn22 = tk.Button(frameTab24, text="Parar coleta", bg="white", fg="blue",
                      command=stopCollecting,
                      padx=5, pady=5)  # criar botão/ command=função do botão
 btn22.grid(column=3, row=1, sticky="ew")  # posição do botão
