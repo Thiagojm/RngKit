@@ -1,0 +1,24 @@
+#!/bin/bash
+
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+path=$DIR'/coletas/'
+mkdir -p $path
+sudo service seedd stop
+fname=$2
+number=1
+
+
+while ( true ); do
+	before=`date +%s%3N`
+	sudo seedd --limit-max-xfer --no-qa -$1 -b 256 | tee -a $path$fname.bin | xxd -b -c256 | cut -f 2-257 -d ' ' | sed 's/[^1]//g' | awk -v num="$number" -v date="$(date +"%T")" '{ print num, length, date }' >>$path$fname.txt
+	awk -v num="$number" -v date="$(date +"%T")" -F ' ' '{s+=$2;sum+=$2;a[NR]=$2} END {print date, (s/NR-1024)/((22.627417)/sqrt(NR))}' $path$fname.txt >> $path$fname'zscore.txt' 2>/dev/null
+	number=$(( ++number ))
+	after=`date +%s%3N`
+	DELAY=`echo "1-(($after-$before)/1000)" | bc -l`
+	sleep $DELAY 2>/dev/null
+done &
+# echo -e "\e[1;36;5mCollecting data...\e[0m"
+# read -p "Press [Enter] key to stop..."
+# sudo ps -ef | awk '/blive/{print$2}' | xargs kill 2>/dev/null
+

@@ -8,10 +8,13 @@ from tkinter import filedialog
 from tkinter import ttk
 import tkinter.messagebox
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 import os
+import time
 import xlsxwriter
 import subprocess
 from PIL import Image, ImageTk
+
 
 
 # define o local da onde o script esta sendo rodado
@@ -23,20 +26,29 @@ global selectedComboM1
 global selectedComboM2
 global selectedEntryId1
 global selectedEntryId2
+global selectedLive
+global selectedComboLive
+global bLiveName
+global isLiveOn
+global ax1
+global fig
 script_path = os.getcwd()
 isCapturingOn = False
+isLiveOn = False
 
 # Parametros tkinter
 window = tk.Tk()
-# window.geometry('800x520')  # window size
+#window.geometry('880x180')  # window size
 window.title("Welcome to RNG Project App")  # window title
 
 # Adicionando tabs
 tab_control = ttk.Notebook(window) 
 tab1 = ttk.Frame(tab_control) 
-tab2 = ttk.Frame(tab_control) 
-tab_control.add(tab1, text='Gerar arquivos') 
-tab_control.add(tab2, text='Coletar dados')
+tab2 = ttk.Frame(tab_control)
+tab3 = ttk.Frame(tab_control) 
+tab_control.add(tab1, text='Análise de Dados') 
+tab_control.add(tab2, text='Coleta de Dados')
+tab_control.add(tab3, text='Gráfico ao Vivo') 
 
 # ------------------------- TAB1---------------------------------------
 # Frames
@@ -392,6 +404,128 @@ btn22 = tk.Button(frameTab24, text="Parar coleta", bg="white", fg="blue",
                      command=stopCollecting,
                      padx=5, pady=5)  # criar botão/ command=função do botão
 btn22.grid(column=3, row=1, sticky="ew")  # posição do botão
+
+# ------------------------------TAB3 -----------------------------------
+
+# Frames
+frameTab31 = tk.Frame(tab3, borderwidth="2", relief="ridge")
+frameTab31.grid(column=0, row=0, sticky="ns")
+
+frameTab32 = tk.Frame(tab3, borderwidth="2", relief="ridge")
+frameTab32.grid(column=1, row=0, sticky="ns")
+
+frameTab33 = tk.Frame(tab3, borderwidth="2", relief="ridge")
+frameTab33.grid(column=2, row=0, sticky="ns")
+
+frameTab34 = tk.Frame(tab3, borderwidth="2", relief="ridge")
+frameTab34.grid(column=3, row=0, sticky="ns")
+
+frameTab35 = tk.Frame(tab3, borderwidth="2", relief="ridge")
+frameTab35.grid(column=4, row=0, sticky="ns")
+
+# Radiobuttons
+selectedLive = tk.IntVar()
+selectedLive.set(1)
+radBlive = tk.ttk.Radiobutton(frameTab31,text='Bitbabbler', value=1, variable=selectedLive)
+radTrngLive = tk.ttk.Radiobutton(frameTab31,text='TrueRng', value=2, variable=selectedLive)
+radBlive.grid(column=0, row=1, sticky="ewns")
+radTrngLive.grid(column=0, row=2, sticky="ewns")
+
+# Combobox - bbla
+selectedComboLive = tk.StringVar()
+comboBLive = tk.ttk.Combobox(frameTab32, width=3)
+comboBLive['values']= (0, 1, 2, 3, 4)
+comboBLive.current(0)
+comboBLive.grid(column=0, row=1)
+
+# Labels
+lbl30 = tk.Label(frameTab31, text="Choose RNG",
+                     font=("Arial Bold", 11),
+                     padx=5, pady=5)  # Text inside window
+lbl30.grid(column=0, row=0, sticky="ew")  # posição do label
+
+lbl31 = tk.Label(frameTab32, text="RAW/XOR",
+                     font=("Arial Bold", 11),
+                     padx=5, pady=5)  # Text inside window
+lbl31.grid(column=0, row=0, sticky="ew", columnspan=2)  # posição do label
+
+lbl31i = tk.Label(frameTab32, text=" ",
+                     font=("Arial Bold", 9))  # Text inside window
+lbl31i.grid(column=0, row=2, sticky="ew")  # posição do label
+
+# Funções
+
+
+
+def startPlot():
+    global ax1
+    global fig
+    plt.rcParams["figure.figsize"] = (12, 6)
+    ani = animation.FuncAnimation(fig, bLiveAnimate, interval=1000)
+    plt.show()
+
+def bLiveAnimate(i):
+    global ax1
+    global fig
+    global bLiveName
+    global script_path
+    fig = plt.figure()
+    ax1 = fig.add_subplot(1, 1, 1)
+    bLiveName = time.strftime("%Y%m%d-%H%M%S")
+    selectedComboLive = comboBLive.get()
+    subprocess.run(["./blive f{} {}".format(selectedComboLive, bLiveName)], shell=True)
+    time.sleep(2)
+    pullData = open((script_path + "/coletas/" + bLiveName + "zscore.txt"), "r").read()
+    dataArray = pullData.split('\n')
+    xar = []
+    yar = []
+    for eachLine in dataArray:
+        if len(eachLine) > 1:
+            x, y = eachLine.split(' ')
+            xar.append(x)
+            yar.append(float(y))
+    ax1.clear()
+    ax1.plot(xar, yar)
+    ax1.tick_params(axis='x', rotation=45)
+    ax1.set_title("Live Plot")
+    ax1.set_xticks(ax1.get_xticks()[::30])
+    startPlot()
+
+
+
+
+
+def stopLive():
+    global isLiveOn
+    global selectedComboLive
+    if isLiveOn == True:
+        isLiveOn = False
+        if selectedComboLive.get() == 1:
+            subprocess.run(["ps -ef | awk '/blive/{print$2}' | sudo xargs kill 2>/dev/null"], shell=True)   
+        elif selectedComboLive.get() == 2:
+            subprocess.run(["ps -ef | awk '/rnglive/{print$2}' | sudo xargs kill 2>/dev/null"], shell=True)
+        tk.messagebox.showinfo('File Saved','Salvo em ' + bLiveName + '/coletas')
+    else:
+        tk.messagebox.showinfo('Alerta','Captura não iniciada')
+
+# Buttons
+btn31 = tk.Button(frameTab34, text="Gráfico ao Vivo", bg="white", fg="blue",
+                     command=bLiveAnimate,
+                     padx=5, pady=5)  # criar botão/ command=função do botão
+btn31.grid(column=3, row=0, sticky="ew")  # posição do botão
+
+btn32 = tk.Button(frameTab34, text="Parar", bg="white", fg="blue",
+                     command=stopLive,
+                     padx=5, pady=5)  # criar botão/ command=função do botão
+btn32.grid(column=3, row=1, sticky="ew")  # posição do botão
+
+# Image
+#matrix = Image.open("matrix.jpg")
+#matrix = matrix.resize((200, 140), Image.ANTIALIAS)
+#matrixjov = ImageTk.PhotoImage(matrix)
+labelmatrix2 = tk.Label(frameTab35, image=matrixjov)
+labelmatrix2.image = matrixjov
+labelmatrix2.grid(row = 0, column = 0, sticky="wens")
 
 
 # Confirma saída do programa e fecha de vez
