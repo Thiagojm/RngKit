@@ -14,6 +14,7 @@ import time
 import xlsxwriter
 import subprocess
 from PIL import Image, ImageTk
+import threading
 
 
 
@@ -30,8 +31,6 @@ global selectedLive
 global selectedComboLive
 global bLiveName
 global isLiveOn
-global ax1
-global fig
 script_path = os.getcwd()
 isCapturingOn = False
 isLiveOn = False
@@ -371,7 +370,7 @@ def startCollecting():  # criar função para quando o botão for clicado
             mbbla()
         elif selectedColeta.get() == 4:
             mrng()
-            
+        tk.messagebox.showinfo('Alerta','Captura Iniciada, clique em "Parar Coleta" para finalizar.')      
     else:
         tk.messagebox.showinfo('Alerta','Captura já ativa')
 
@@ -455,44 +454,41 @@ lbl31i.grid(column=0, row=2, sticky="ew")  # posição do label
 
 # Funções
 
-
-
-def startPlot():
-    global ax1
-    global fig
+def livePlotConf():
+    subprocess.run(["ps -ef | awk '/blive/{print$2}' | sudo xargs kill 2>/dev/null"], shell=True)
     plt.rcParams["figure.figsize"] = (12, 6)
-    ani = animation.FuncAnimation(fig, bLiveAnimate, interval=1000)
-    plt.show()
-
-def bLiveAnimate(i):
-    global ax1
-    global fig
+    fig = plt.figure()
+    ax1 = fig.add_subplot(1,1,1)
     global bLiveName
     global script_path
-    fig = plt.figure()
-    ax1 = fig.add_subplot(1, 1, 1)
     bLiveName = time.strftime("%Y%m%d-%H%M%S")
     selectedComboLive = comboBLive.get()
     subprocess.run(["./blive f{} {}".format(selectedComboLive, bLiveName)], shell=True)
-    time.sleep(2)
-    pullData = open((script_path + "/coletas/" + bLiveName + "zscore.txt"), "r").read()
-    dataArray = pullData.split('\n')
-    xar = []
-    yar = []
-    for eachLine in dataArray:
-        if len(eachLine) > 1:
-            x, y = eachLine.split(' ')
-            xar.append(x)
-            yar.append(float(y))
-    ax1.clear()
-    ax1.plot(xar, yar)
-    ax1.tick_params(axis='x', rotation=45)
-    ax1.set_title("Live Plot")
-    ax1.set_xticks(ax1.get_xticks()[::30])
-    startPlot()
+    #time.sleep(1)
+    def animate(i):
+        pullData = open((script_path + "/coletas/" + bLiveName + "zscore.txt"), "r").read()
+        dataArray = pullData.split('\n')
+        xar = []
+        yar = []
+        for eachLine in dataArray:
+            if len(eachLine) > 1:
+                x, y = eachLine.split(' ')
+                xar.append(x)
+                yar.append(float(y))
+        ax1.clear()
+        ax1.grid()
+        ax1.plot(xar, yar, marker='o', color='orange')
+        ax1.tick_params(axis='x', rotation=45)
+        ax1.set_title("Live Plot")
+        ax1.set_xticks(ax1.get_xticks()[::5])
+    ani = animation.FuncAnimation(fig, animate, interval=1000)
+    plt.show()
 
 
-
+def livePlot():
+    threading.Thread(target=livePlotConf).start()
+    global isLiveOn
+    isLiveOn = True
 
 
 def stopLive():
@@ -500,17 +496,17 @@ def stopLive():
     global selectedComboLive
     if isLiveOn == True:
         isLiveOn = False
-        if selectedComboLive.get() == 1:
+        if selectedLive.get() == 1:
             subprocess.run(["ps -ef | awk '/blive/{print$2}' | sudo xargs kill 2>/dev/null"], shell=True)   
-        elif selectedComboLive.get() == 2:
+        elif selectedLive.get() == 2:
             subprocess.run(["ps -ef | awk '/rnglive/{print$2}' | sudo xargs kill 2>/dev/null"], shell=True)
-        tk.messagebox.showinfo('File Saved','Salvo em ' + bLiveName + '/coletas')
+        tk.messagebox.showinfo('ATENÇÃO!!!','Fechar a janela do Gráfico antes de iniciar nova Coleta!!')
     else:
         tk.messagebox.showinfo('Alerta','Captura não iniciada')
 
 # Buttons
 btn31 = tk.Button(frameTab34, text="Gráfico ao Vivo", bg="white", fg="blue",
-                     command=bLiveAnimate,
+                     command=livePlot,
                      padx=5, pady=5)  # criar botão/ command=função do botão
 btn31.grid(column=3, row=0, sticky="ew")  # posição do botão
 
@@ -520,12 +516,13 @@ btn32 = tk.Button(frameTab34, text="Parar", bg="white", fg="blue",
 btn32.grid(column=3, row=1, sticky="ew")  # posição do botão
 
 # Image
-#matrix = Image.open("matrix.jpg")
-#matrix = matrix.resize((200, 140), Image.ANTIALIAS)
-#matrixjov = ImageTk.PhotoImage(matrix)
-labelmatrix2 = tk.Label(frameTab35, image=matrixjov)
-labelmatrix2.image = matrixjov
-labelmatrix2.grid(row = 0, column = 0, sticky="wens")
+
+graph = Image.open("graph.png")
+graph = graph.resize((200, 140), Image.ANTIALIAS)
+graphjov = ImageTk.PhotoImage(graph)
+labelGraph = tk.Label(frameTab35, image=graphjov)
+labelGraph.image = graphjov
+labelGraph.grid(row = 0, column = 0, sticky="wens")
 
 
 # Confirma saída do programa e fecha de vez
