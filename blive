@@ -5,14 +5,14 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 path=$DIR'/coletas/'
 mkdir -p $path
 sudo service seedd stop
-fname=$2
+fname=$1
 number=1
 touch $path$fname'zscore.txt'
 
 
 while ( true ); do
 	before=`date +%s%3N`
-	sudo seedd --limit-max-xfer --no-qa -$1 -b 256 | tee -a $path$fname.bin | xxd -b -c256 | cut -f 2-257 -d ' ' | sed 's/[^1]//g' | awk -v num="$number" -v date="$(date +"%T")" '{ print num, length, date }' >>$path$fname.txt
+	sudo seedd --limit-max-xfer --no-qa -$2 -b 256 | tee -a $path$fname.bin | xxd -b -c256 | cut -f 2-257 -d ' ' | sed 's/[^1]//g' | awk -v num="$number" -v date="$(date +"%T")" '{ print num, length, date }' >>$path$fname.txt
 	awk -v num="$number" -v date="$(date +"%T")" -F ' ' '{s+=$2;sum+=$2;a[NR]=$2} END {print date, (s/NR-1024)/((22.627417)/sqrt(NR))}' $path$fname.txt >> $path$fname'zscore.txt' 2>/dev/null
 	number=$(( ++number ))
 	after=`date +%s%3N`

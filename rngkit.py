@@ -456,15 +456,19 @@ lbl31i.grid(column=0, row=2, sticky="ew")  # posição do label
 
 def livePlotConf():
     subprocess.run(["ps -ef | awk '/blive/{print$2}' | sudo xargs kill 2>/dev/null"], shell=True)
+    subprocess.run(["ps -ef | awk '/rnglive/{print$2}' | sudo xargs kill 2>/dev/null"], shell=True)
     plt.rcParams["figure.figsize"] = (12, 6)
     fig = plt.figure()
     ax1 = fig.add_subplot(1,1,1)
     global bLiveName
     global script_path
+    global selectedLive
     bLiveName = time.strftime("%Y%m%d-%H%M%S")
     selectedComboLive = comboBLive.get()
-    subprocess.run(["./blive f{} {}".format(selectedComboLive, bLiveName)], shell=True)
-    #time.sleep(1)
+    if selectedLive.get() == 1:
+        subprocess.run(["./blive {} f{}".format(bLiveName, selectedComboLive)], shell=True)
+    elif selectedLive.get() == 2:
+        subprocess.run(["./rnglive {}".format(bLiveName)], shell=True)
     def animate(i):
         pullData = open((script_path + "/coletas/" + bLiveName + "zscore.txt"), "r").read()
         dataArray = pullData.split('\n')
