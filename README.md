@@ -1,9 +1,22 @@
 # Zplot
 
+Written in Python 3.7.4
+
 Kit para trabalhar com RNGs, montar Z-score, Coletar dados e LivePlot
 
-No raspberry pi além das bibliotecas normais, tb instalar: sudo apt-get install python-dev libatlas-base-dev
+Raspberry Pi:
+Além das bibliotecas normais, tb instalar: sudo apt-get install python-dev libatlas-base-dev
 sudo apt-get install python3-pil.imagetk
+
+Ubuntu:
+sudo apt install python3-pip
+sudo apt-get install python3-tk
+sudo apt-get install python3-pil.imagetk
+pip3 install bitstring
+pip3 install pandas
+pip3 install matplotlib
+pip3 install xlsxwriter
+
 
 To make executable with pyinstaller:
 /usr/bin/python3 -m PyInstaller --hidden-import=PIL._tkinter_finder zplot.py
