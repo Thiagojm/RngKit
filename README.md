@@ -1,4 +1,4 @@
-# Zplot
+# RngKit
 
 Written in Python 3.7.4  
 
