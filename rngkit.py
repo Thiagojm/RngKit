@@ -40,14 +40,14 @@ window = tk.Tk()
 #window.geometry('880x180')  # window size
 window.title("Welcome to RNG Project App")  # window title
 
-# Adicionando tabs
+# Adding Tabs tabs
 tab_control = ttk.Notebook(window) 
 tab1 = ttk.Frame(tab_control) 
 tab2 = ttk.Frame(tab_control)
 tab3 = ttk.Frame(tab_control) 
-tab_control.add(tab1, text='Análise de Dados') 
-tab_control.add(tab2, text='Coleta de Dados')
-tab_control.add(tab3, text='Gráfico ao Vivo') 
+tab_control.add(tab1, text='Data Analysis') 
+tab_control.add(tab2, text='Acquiring Data')
+tab_control.add(tab3, text='Live Plot') 
 
 # ------------------------- TAB1---------------------------------------
 # Frames
@@ -63,15 +63,15 @@ frameTab13.grid(column=2, row=0, sticky="ns")
 frameTab14 = tk.Frame(tab1, borderwidth="2", relief="ridge")
 frameTab14.grid(column=3, row=0, sticky="ns")
 
-# Linha 1 - Abrir arquivo coletado para trabalhar e transformar em .xlsx
-lbl1 = tk.Label(frameTab11, text="Clique para abrir o arquivo...",
+# Line 1 - Open collected file to work and transform to .xlsx
+lbl1 = tk.Label(frameTab11, text="Click to open file ...",
                      font=("Arial Bold", 11),
                      padx=5, pady=5)  # Text inside window
-lbl1.grid(column=0, row=0, sticky="ew")  # posição do label
+lbl1.grid(column=0, row=0, sticky="ew")  # Label Position
 
 
 
-# Imagem
+# Image
 
 bitB = Image.open("BitB.png")
 bitB = bitB.resize((200, 140), Image.ANTIALIAS)
@@ -88,22 +88,22 @@ labelimg2.image = projImjov
 labelimg2.grid(row = 0, column = 0, sticky="wens")
 
 
-def open_file():  # criar função para quando o botão for clicado
-    global data_file  # criar variavel global, pode ser usada fora da função
+def open_file():
+    global data_file
     data_file = filedialog.askopenfilename(initialdir=script_path, title="Select file",
                                 filetypes=(("CSV Files", '*.csv'), ("Text Files", '*.txt'), ("all files", "*.*")))
     lbl1.configure(text=data_file)
-    btn1.configure(text="Selecionar outro arquivo")
+    btn1.configure(text="Select another file")
 
 
 
-btn1 = tk.Button(frameTab12, text="Selecionar arquivo", bg="white", fg="blue",
+btn1 = tk.Button(frameTab12, text="Select File", bg="white", fg="blue",
                      command=open_file,
                      padx=5, pady=5)  # criar botão/ command=função do botão
 btn1.grid(column=1, row=0, sticky="ew")  # posição do botão
 
 # Linha 2 - Salvar arquivo para xlxs direto
-lbl2 = tk.Label(frameTab11, text="Gerar arquivo .xlsx",
+lbl2 = tk.Label(frameTab11, text="Create .xlsx File",
                     font=("Arial Bold", 11),
                      padx=5, pady=5)  # Text inside window
 lbl2.grid(column=0, row=1, sticky="ew")  # posição do label
@@ -161,7 +161,7 @@ def Ztesta():
                       'categories': ['Z-Test', 1, 1, number_rows, 1]})
     worksheet.insert_chart('G2', chart)
     writer.save()
-    tk.messagebox.showinfo('File Saved','Salvo em ' + file_to_save)
+    tk.messagebox.showinfo('File Saved','Saved as ' + file_to_save)
     
 
 btn2 = tk.Button(frameTab12, text="Gerar", bg="white", fg="blue",
@@ -170,7 +170,7 @@ btn2 = tk.Button(frameTab12, text="Gerar", bg="white", fg="blue",
 btn2.grid(column=1, row=1, sticky="ew")  # posição do botão
 
 # Linha 3 - Salvar as arquivo para xlxs
-lbl3 = tk.Label(frameTab11, text="Gerar e salvar em...",
+lbl3 = tk.Label(frameTab11, text="Create and Save as...",
                     font=("Arial Bold", 11),
                      padx=5, pady=5)  # Text inside window
 lbl3.grid(column=0, row=2, sticky="ew")  # posição do label
@@ -231,10 +231,10 @@ def Ztest():
                       'categories': ['Z-Test', 1, 1, number_rows, 1]})
     worksheet.insert_chart('G2', chart)
     writer.save()
-    tk.messagebox.showinfo('File Saved','Salvo em ' + file_to_save)
+    tk.messagebox.showinfo('File Saved','Saved as ' + file_to_save)
     
 
-btn3 = tk.Button(frameTab12, text="Savar em...", bg="white", fg="blue",
+btn3 = tk.Button(frameTab12, text="Save as...", bg="white", fg="blue",
                      command=Ztest,
                      padx=5, pady=5)  # criar botão/ command=função do botão
 btn3.grid(column=1, row=2, sticky="ew")  # posição do botão
@@ -354,7 +354,7 @@ def mbbla():
     
 
 def mrng():
-    tk.messagebox.showinfo('Alerta','Ainda em desenvolvimento')
+    tk.messagebox.showinfo('Alert','Still under development')
 
 
 def startCollecting():  # criar função para quando o botão for clicado
@@ -370,9 +370,9 @@ def startCollecting():  # criar função para quando o botão for clicado
             mbbla()
         elif selectedColeta.get() == 4:
             mrng()
-        tk.messagebox.showinfo('Alerta','Captura Iniciada, clique em "Parar Coleta" para finalizar.')      
+        tk.messagebox.showinfo('Alert','Capture Started, click "Stop" to finish.')      
     else:
-        tk.messagebox.showinfo('Alerta','Captura já ativa')
+        tk.messagebox.showinfo('Alert','Already Capturing Data...')
 
 
 def stopCollecting():
@@ -390,16 +390,16 @@ def stopCollecting():
             subprocess.run(["ps -ef | awk '/mrng/{print$2}' | sudo xargs kill 2>/dev/null"], shell=True)
         tk.messagebox.showinfo('File Saved','Salvo em ' + script_path + '/coletas')
     else:
-        tk.messagebox.showinfo('Alerta','Captura não iniciada')
+        tk.messagebox.showinfo('Alert','Capture not started')
 
 
 
-btn21 = tk.Button(frameTab24, text="Iniciar coleta", bg="white", fg="blue",
+btn21 = tk.Button(frameTab24, text="Start Capturing", bg="white", fg="blue",
                      command=startCollecting,
                      padx=5, pady=5)  # criar botão/ command=função do botão
 btn21.grid(column=3, row=0, sticky="ew")  # posição do botão
 
-btn22 = tk.Button(frameTab24, text="Parar coleta", bg="white", fg="blue",
+btn22 = tk.Button(frameTab24, text="Stop", bg="white", fg="blue",
                      command=stopCollecting,
                      padx=5, pady=5)  # criar botão/ command=função do botão
 btn22.grid(column=3, row=1, sticky="ew")  # posição do botão
@@ -504,17 +504,17 @@ def stopLive():
             subprocess.run(["ps -ef | awk '/blive/{print$2}' | sudo xargs kill 2>/dev/null"], shell=True)   
         elif selectedLive.get() == 2:
             subprocess.run(["ps -ef | awk '/rnglive/{print$2}' | sudo xargs kill 2>/dev/null"], shell=True)
-        tk.messagebox.showinfo('ATENÇÃO!!!','Fechar a janela do Gráfico antes de iniciar nova Coleta!!')
+        tk.messagebox.showinfo('WARNING !!! ',' Close the Graph window before acquiring new Data!!')
     else:
-        tk.messagebox.showinfo('Alerta','Captura não iniciada')
+        tk.messagebox.showinfo('Alert','Capure not started')
 
 # Buttons
-btn31 = tk.Button(frameTab34, text="Gráfico ao Vivo", bg="white", fg="blue",
+btn31 = tk.Button(frameTab34, text="Live Plot", bg="white", fg="blue",
                      command=livePlot,
                      padx=5, pady=5)  # criar botão/ command=função do botão
 btn31.grid(column=3, row=0, sticky="ew")  # posição do botão
 
-btn32 = tk.Button(frameTab34, text="Parar", bg="white", fg="blue",
+btn32 = tk.Button(frameTab34, text="Stop", bg="white", fg="blue",
                      command=stopLive,
                      padx=5, pady=5)  # criar botão/ command=função do botão
 btn32.grid(column=3, row=1, sticky="ew")  # posição do botão
