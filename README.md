@@ -2,7 +2,7 @@
 
 Written in Python 3.7.4  
 
-Kit for working with TRNGs (True Random Number Generators, creating Z-score tables, acquiring data and LivePlot!  
+Kit for working with TRNGs (True Random Number Generators), creating Z-score tables, acquiring data and LivePlot!  
 
 Raspberry Pi:
 In addition to the normal libraries, also install:  
@@ -23,7 +23,7 @@ pip3 install xlsxwriter
 To make executable with pyinstaller:
 /usr/bin/python3 -m PyInstaller --hidden-import=PIL._tkinter_finder zplot.py  
 
-Then copy pictures to the Zplot folder and the bash scripts too (bbla, mbbla, rng)  
+Then copy the pictures to the RngKit folder and the bash scripts (bbla, mbbla, rng)  
 
 Installation:  
 1- Open Terminal inside the RngKit Folder  
